@@ -143,6 +143,47 @@ func Open(drivername string, dataSourceName string) (*DB, error) {
 	}, nil
 }
 
+// DatabaseBoardReader can read bbs board list
+type DatabaseBoardReader interface {
+	ReadUserRecords() ([]UserRecord, error)
+	ReadUserFavoriteRecords(userId string) ([]FavoriteRecord, error)
+	ReadBoardRecords() ([]BoardRecord, error)
+}
+
+// DatabaseBoardWriter can create bbs board or modify bbs board
+type DatabaseBoardWriter interface {
+	WriteBoardRecord(*BoardRecord) error
+}
+
+// HotboardDatabase is database interface which support hotboard list
+type HotboardDatabase interface {
+	ReadHotboardRecords() ([]BoardRecord, error)
+}
+
+// UserPageDatabase support a fetch article list by userId
+type UserPageDatabase interface {
+	ReadUserArticleRecordsFile(userId string) ([]ArticleRecord, error)
+	ReadUserCommentedArticleRecordFile(userId string) ([]ArticleRecord, error)
+}
+
+// DatabaseArticleReader can read bbs article list and articles
+type DatabaseArticleReader interface {
+	ReadBoardArticleRecordsFile(boardId string) ([]ArticleRecord, error)
+	ReadBoardArticleFile(boardId string, filename string) ([]byte, error)
+}
+
+// DatabaseArticleWriter support post article
+type DatabaseArticleWriter interface {
+	WriteBoardArticleFile(boardId string, filename string, data []byte) error
+	AppendBoardArticleFile(boardId string, filename string, data []byte) error
+}
+
+// DatabaseTreasureReader can read bbs treasure article list and articles
+type DatabaseTreasureReader interface {
+	ReadBoardTreasureRecordsFile(boardId string, treasureId []string) ([]ArticleRecord, error)
+	ReadBoardTreasureFile(boardId string, treasuresId []string, filename string) ([]byte, error)
+}
+
 // ReadUserRecords returns the UserRecords
 func (db *DB) ReadUserRecords() ([]UserRecord, error) {
 
